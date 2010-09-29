@@ -73,8 +73,25 @@ function destroysnaps {
 		if [ ${MOUNTTYPE[$j]} == "snap" ]; then
 			echo -n "Removing LVM snapshot of ${SNAPVOLS[$j]}..."
 			if ! lvremove -f ${SNAPVG[$j]}/${SNAPNAME[$j]} >/dev/null 2>&1; then
-				echo -e $FAILURE
-				ret=1
+			        # this hack seems to remove it even when above wont
+				echo -n " hard way..."
+				DMNAME=$(basename ${SNAPVG[$j]})-$(echo ${SNAPNAME[$j]} | sed s/-snap/--snap/)
+				retout=0
+				sleep 3
+				dmsetup remove $DMNAME >/dev/null
+				retout=$(($retout + $?))
+				sleep 2
+				lvremove -f ${SNAPVG[$j]}/${SNAPNAME[$j]} >/dev/null
+				retout=$(($retout + $?))
+				sleep 1
+				dmsetup remove ${DMNAME}-cow >/dev/null
+				retout=$(($retout + $?))
+				if [ $retout != 0 ] ; then
+				     echo -e $FAILURE
+				     ret=1
+				else
+				     echo -e $SUCCESS
+				fi
 			else
 				echo -e $SUCCESS
 			fi
