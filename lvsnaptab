@@ -1,0 +1,37 @@
+# This file is used by the lvsnap script to provide the name of
+# the volumes which should be snapped, the location that the
+# snaps should be mounted, and the amount of space that should
+# be allocated to the snapshot.
+#
+# The snaps will be created and mounted in the order listed and
+# unmounted and destroyed in the reverse order.
+#
+
+# Currently this file requires 5 parameters for each volume:
+#
+# Field 1 - <LV or bind source> - This field should be the name of
+# the logical volume which should be snapped, or the source mount point
+# for bind mounts
+#
+# Field 2 - <Dest mount point> - This field defines the directory where
+# the given snapshot or bind source will be mounted
+#
+# Field 3 - <fstype> - This field is currently unused but may eventually
+# be used to improve support and options for other filesystems
+#
+# Field 4 - <mounttype> - This field defines if the given line defines a
+# LV snapshot or a bind mount
+#
+# Field 5 - <snapspace> - This field defines the amount of space allocated
+# to the LV snapshot (it is not required for bind mounts).  It is passed as
+# a direct to the lvcreate -L|--size  parameter and thus can be in any
+# format that this parameter accepts.
+# lvcreate lists the syntax as "-L|--size LogicalVolumeSize[kKmMgGtTpPeE]}"
+	
+# Example LVM snapshot
+# /dev/vg/lv	/mnt/snapback  	    ext3  snap  2G
+#
+# Example bind mount
+# /boot 	/mnt/snapback/boot  	ext3  bind
+# /var	/mnt/snapback/var	btrfs	bsnap	2G
+# /usr	/mnt/snapback/usr	ext3	snap	3G
