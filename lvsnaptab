@@ -28,10 +28,12 @@
 # format that this parameter accepts.
 # lvcreate lists the syntax as "-L|--size LogicalVolumeSize[kKmMgGtTpPeE]}"
 	
-# Example LVM snapshot
+# Example LVM snapshot with ext3
 # /dev/vg/lv	/mnt/snapback  	    ext3  snap  2G
 #
 # Example bind mount
 # /boot 	/mnt/snapback/boot  	ext3  bind
+
+# Example of btrfs snapshot (no LVM is needed)
 # /var	/mnt/snapback/var	btrfs	bsnap	2G
-# /usr	/mnt/snapback/usr	ext3	snap	3G
+
