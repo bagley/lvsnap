@@ -130,6 +130,7 @@ function mountsnaps {
 			if [ ${MOUNTTYPE[$i]} == "snap" ]; then
 				echo -n "Mounting snapshot volume ${SNAPVG[$i]}/${SNAPNAME[$i]} at ${SNAPMOUNTS[$i]}..."
 				if ! mount ${SNAPVG[$i]}/${SNAPNAME[$i]} ${SNAPMOUNTS[$i]} >/dev/null 2>&1; then
+					mount ${SNAPMOUNTS[$i]} -o remount,ro >/dev/null 2>&1
 					echo -e $FAILURE
 					ret=1
 				else
@@ -138,14 +139,17 @@ function mountsnaps {
 			elif [ ${MOUNTTYPE[$i]} == "bind" ]; then
 				echo -n "Creating bind mount for ${SNAPVOLS[$i]} at ${SNAPMOUNTS[$i]}..."
 				if ! mount --bind ${SNAPVOLS[$i]} ${SNAPMOUNTS[$i]} >/dev/null 2>&1; then
+					mount ${SNAPMOUNTS[$i]} -o remount,ro >/dev/null 2>&1
 					echo -e $FAILURE
 					ret=1
 				else
+				        # mount ${SNAPMOUNTS[$i]} -o remount,ro >/dev/null 2>&1
 					echo -e $SUCCESS
 				fi
 			elif [ ${MOUNTTYPE[$i]} == "bsnap" ]; then
 				echo -n "Binding BTRFS snapshot for ${SNAPVOLS[$i]} to ${SNAPMOUNTS[$i]}..."
 				if ! mount --bind "${SNAPVOLS[$i]}/.backupsnap" ${SNAPMOUNTS[$i]} >/dev/null 2>&1; then
+					mount ${SNAPMOUNTS[$i]} -o remount,ro >/dev/null 2>&1
 					echo -e $FAILURE
 					ret=1
 				else
