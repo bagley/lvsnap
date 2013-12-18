@@ -1,0 +1,3 @@
+Modifications to the original lvsnap program.
+
+Adds btrfs snapshots as well as lvm snapshots.
