@@ -128,9 +128,14 @@ function mountsnaps {
 		if ! ismount ${SNAPMOUNTS[$i]}; then
 			mkdir -p ${SNAPMOUNTS[$i]}
 			if [ ${MOUNTTYPE[$i]} == "snap" ]; then
+				if [ "${SNAPFSTYPE[$i]}" = "xfs" ]; then
+					MOUNTOPTS="nouuid"
+				else
+					MOUNTOPTS=""
+				fi
 				echo -n "Mounting snapshot volume ${SNAPVG[$i]}/${SNAPNAME[$i]} at ${SNAPMOUNTS[$i]}..."
-				if ! mount ${SNAPVG[$i]}/${SNAPNAME[$i]} ${SNAPMOUNTS[$i]} >/dev/null 2>&1; then
-					mount ${SNAPMOUNTS[$i]} -o remount,ro >/dev/null 2>&1
+				if ! mount -o ${MOUNTOPTS} ${SNAPVG[$i]}/${SNAPNAME[$i]} ${SNAPMOUNTS[$i]} >/dev/null 2>&1; then
+					mount ${SNAPMOUNTS[$i]} -o remount,ro,${MOUNTOPTS} >/dev/null 2>&1
 					echo -e $FAILURE
 					ret=1
 				else
