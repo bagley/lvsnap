@@ -16,8 +16,8 @@
 # Field 2 - <Dest mount point> - This field defines the directory where
 # the given snapshot or bind source will be mounted
 #
-# Field 3 - <fstype> - This field is currently unused but may eventually
-# be used to improve support and options for other filesystems
+# Field 3 - <fstype> - This field defines the filesystem. Currently 
+# supported filesystems are ext3, ext4, btrfs, and xfs.
 #
 # Field 4 - <mounttype> - This field defines if the given line defines a
 # LV snapshot or a bind mount
@@ -30,7 +30,13 @@
 	
 # Example LVM snapshot with ext3
 # /dev/vg/lv	/mnt/snapback  	    ext3  snap  2G
-#
+
+# Example LVM snapshot with ext4
+# /dev/vg/lv	/mnt/snapback  	    ext4  snap  2G
+
+# Example LVM snapshot with xfs
+# /dev/vg/lv	/mnt/snapback  	    xfs   snap  2G
+
 # Example bind mount
 # /boot 	/mnt/snapback/boot  	ext3  bind
 
