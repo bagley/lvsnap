@@ -128,14 +128,20 @@ function mountsnaps {
 		if ! ismount ${SNAPMOUNTS[$i]}; then
 			mkdir -p ${SNAPMOUNTS[$i]}
 			if [ ${MOUNTTYPE[$i]} == "snap" ]; then
+				# add options to other filesystems as needed:
+				EXTRA_MOUNTOPTS=""
+				O_EXTRA_MOUNTOPTS=""
 				if [ "${SNAPFSTYPE[$i]}" = "xfs" ]; then
-					MOUNTOPTS="nouuid"
-				else
-					MOUNTOPTS=""
+					EXTRA_MOUNTOPTS="${EXTRA_MOUNTOPT},nouuid"
+				fi
+				# format extra mount options
+				if [ -n "${EXTRA_MOUNTOPTS}" ] ; then
+					# add the -o and remove first ,
+					O_EXTRA_MOUNTOPTS="-o $(echo "${EXTRA_MOUNTOPTS}" | sed 's/^,//')"
 				fi
 				echo -n "Mounting snapshot volume ${SNAPVG[$i]}/${SNAPNAME[$i]} at ${SNAPMOUNTS[$i]}..."
-				if ! mount -o ${MOUNTOPTS} ${SNAPVG[$i]}/${SNAPNAME[$i]} ${SNAPMOUNTS[$i]} >/dev/null 2>&1; then
-					mount ${SNAPMOUNTS[$i]} -o remount,ro,${MOUNTOPTS} >/dev/null 2>&1
+				if ! mount ${O_EXTRA_MOUNTOPTS} ${SNAPVG[$i]}/${SNAPNAME[$i]} ${SNAPMOUNTS[$i]} >/dev/null 2>&1; then
+					mount ${SNAPMOUNTS[$i]} -o remount,ro${EXTRA_MOUNTOPTS} >/dev/null 2>&1
 					echo -e $FAILURE
 					ret=1
 				else
