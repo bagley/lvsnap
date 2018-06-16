@@ -1,3 +1,20 @@
-Modifications to the original lvsnap program.
+This program makes LVM and Btrfs snapshots of filesystems. This can be useful for for snapshotting a system to back it up.
 
-Adds btrfs snapshots as well as lvm snapshots.
+It supports:
+- LVM snapshots of ext3, ext4, and xfs
+- Btrfs snapshots
+- Binding
+
+The snapshot/bind configurations are in lvsnaptab. See it for examples.
+
+The main file is the `lvsnap` which you will need to put in your path. Then save your `lvsnaptab` file to `/usr/local/etc/lvsnaptab`, or you can change it in `lvsnap`:
+# Location of the lvsnap configuration file
+LVSNAPTAB=/usr/local/etc/lvsnaptab
+
+Once you have configured that, run:
+lvsnap start
+
+To stop the binds/snapshots:
+lvsnap stop
+
+Modifications to the original lvsnap program, which was written by Tom Sightler.
